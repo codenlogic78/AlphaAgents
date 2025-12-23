@@ -8,19 +8,19 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-# Configuration from settings - Increased delays for real API calls
-API_DELAY = int(os.getenv("API_DELAY", 3))  # Increased from 1 to 3 seconds
+# Configuration settings
+API_DELAY = int(os.getenv("API_DELAY", 3))  # API delay
 MAX_RETRIES = int(os.getenv("MAX_RETRIES", 3))
 CACHE_DURATION = int(os.getenv("CACHE_DURATION", 3600))
 
 class YFinanceTools:
-    """Financial data collection tools using yfinance (AlphaAgents Paper Implementation)"""
+    """Financial data collection using yfinance"""
     
     def __init__(self):
         self.cache = {}
         
     def get_stock_fundamentals(self, symbol: str) -> dict:
-        """Get fundamental data for Fundamental Agent (Paper's 10K report focus)"""
+        """Get fundamental data"""
         try:
             time.sleep(API_DELAY)
             
@@ -354,7 +354,19 @@ yfinance_tools = YFinanceTools()
 
 # Export functions for AutoGen agents (Paper's exact architecture)
 def get_fundamental_data(symbol: str) -> str:
-    """Function for Fundamental Agent - 10K report analysis focus"""
+    """Function for Fundamental Agent - 10K report analysis focus (Paper-compliant RAG)"""
+    try:
+        # Try Fundamental RAG first (paper requirement: "10K report analysis tool")
+        from .fundamental_rag import get_fundamental_rag_data
+        rag_data = get_fundamental_rag_data(symbol)
+        
+        # Check if RAG succeeded
+        if isinstance(rag_data, str) and "FUNDAMENTAL_RAG" in rag_data:
+            return rag_data
+    except Exception as e:
+        print(f"Fundamental RAG fallback for {symbol}: {e}")
+    
+    # Fallback to yfinance (backup)
     data = yfinance_tools.get_stock_fundamentals(symbol)
     return str(data)
 

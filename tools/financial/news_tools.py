@@ -5,30 +5,30 @@ from datetime import datetime,timedelta
 from dotenv import load_dotenv
 load_dotenv()
 
-#Configuration from settings
+# Configuration
 NEWS_API_KEY=os.getenv("NEWS_API_KEY")
 API_DELAY=int(os.getenv("API_DELAY",1))
 MAX_NEWS_ARTICLES=int(os.getenv("MAX_NEWS_ARTICLES",10))
 
 class NewsAPITools:
-    """NewsAPI tools for Sentiment Agent"""
+    """News analysis tools"""
 
     def __init__(self):
         self.api_key=NEWS_API_KEY
         self.base_url="https://newsapi.org/v2"
 
     def get_financial_news_sentiment(self,symbol:str,company_name:str=None)->dict:
-        """Get financial news sentiment for Sentiment Agent"""
+        """Get news sentiment"""
         try:
             time.sleep(API_DELAY)
             if not self.api_key:
                 return{"error":"API key not found"}
-            #Search query for the company
+            # Search query
             query=f"{symbol}"
             if company_name:
                 query+=f" OR \"{company_name}\""
 
-            #NewsAPI parameters - targetting financial news sources
+            # API parameters
             params={
                 'q':query,
                 'language':'en',

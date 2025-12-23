@@ -7,11 +7,11 @@ from config.agent_prompts import FUNDAMENTAL_AGENT_PROMPT
 from tools.financial import get_fundamental_data
 
 class FundamentalAgent(AssistantAgent):
-    """Fundamental Agent - Analyzes 10-K reports, financial statements, company fundamentals"""
+    """Fundamental analysis agent"""
     
     def __init__(self):
         try:
-            # Old autogen version
+            # Old version
             super().__init__(
                 name="fundamental_agent",
                 system_message=FUNDAMENTAL_AGENT_PROMPT,
@@ -21,23 +21,23 @@ class FundamentalAgent(AssistantAgent):
                 }
             )
         except TypeError:
-            # New autogen_agentchat version - requires model_client
+            # New version
             from openai import OpenAI
             import os
             client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
             super().__init__(
                 name="fundamental_agent",
                 model_client=client,
-                description="Fundamental Agent - Analyzes 10-K reports, financial statements, company fundamentals"
+                description="Fundamental analysis agent"
             )
         
     def analyze_stock(self, symbol: str) -> str:
-        """Core fundamental analysis for multi-agent debate"""
+        """Analyze stock fundamentals"""
         try:
-            # Get fundamental data using the tool
+            # Get fundamental data
             fundamental_data = get_fundamental_data(symbol)
             
-            # Focused analysis prompt for debate context
+            # Analysis prompt
             analysis_prompt = f"""
             Analyze {symbol} fundamentals for investment decision:
             

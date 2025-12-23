@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-AlphaAgents:  Multi-Agent System for Equity Analysis
+Multi-agent stock analysis system
 """
 
 import os
@@ -13,20 +13,20 @@ from dotenv import load_dotenv
 # Load environment variables
 load_dotenv()
 
-# Import the actual financial tools
+# Import financial tools
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 from tools.financial import get_fundamental_data, get_sentiment_data, get_valuation_data
 
-# AutoGen imports for paper implementation
+# AutoGen imports
 try:
-    # Try new autogen-agentchat version first
+    # Try new version first
     from autogen_agentchat.agents import AssistantAgent
     from autogen_agentchat.teams import RoundRobinGroupChat as GroupChat
     AUTOGEN_AVAILABLE = True
     print("AutoGen (new version) loaded successfully")
 except ImportError:
     try:
-        # Fallback to old autogen version
+        # Try old version
         from autogen import AssistantAgent, GroupChat, GroupChatManager
         AUTOGEN_AVAILABLE = True
         print("AutoGen (old version) loaded successfully")
