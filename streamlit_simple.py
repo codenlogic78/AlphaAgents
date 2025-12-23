@@ -2,8 +2,15 @@ import streamlit as st
 import sys
 import os
 
-# Add project path
-sys.path.append('/Users/anjalisingh/Desktop/PROJECT/AlphaAgents')
+# Add project path (works both locally and on Streamlit Cloud)
+current_dir = os.path.dirname(os.path.abspath(__file__))
+sys.path.append(current_dir)
+
+# Check for required environment variables
+if not os.getenv("OPENAI_API_KEY"):
+    st.error("🔑 OpenAI API Key not found! Please add OPENAI_API_KEY to Streamlit Cloud secrets.")
+    st.info("Go to your app settings → Secrets → Add: OPENAI_API_KEY = 'your-key-here'")
+    st.stop()
 
 # Import your AlphaAgents system
 try:
