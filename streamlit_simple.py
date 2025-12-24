@@ -29,7 +29,7 @@ st.set_page_config(
 
 # Header
 st.title("🤖 AlphaAgents")
-st.subheader("Paper-Compliant Multi-Agent Equity Analysis System")
+st.subheader("Multi-Agent Equity Analysis System")
 
 # Sidebar
 st.sidebar.header("Analysis Configuration")
