@@ -730,6 +730,11 @@ Focus on price trends, technical indicators, and market valuation."""
             "SELL": recommendations.count("SELL")
         }
         
+        # Debug logging
+        print(f"DEBUG: Vote counts: {vote_counts}")
+        print(f"DEBUG: Consensus reached: {collaborative_result.get('consensus_reached', False)}")
+        print(f"DEBUG: Collaborative result: {collaborative_result}")
+        
         # Determine final recommendation
         if collaborative_result.get("consensus_reached", False):
             # Consensus reached
@@ -737,6 +742,7 @@ Focus on price trends, technical indicators, and market valuation."""
             confidence = "HIGH"
             method = collaborative_result.get("method", "consensus")
             reasoning = collaborative_result.get("debate_summary", "All agents reached unanimous agreement")
+            print(f"DEBUG: Using consensus path - final_rec: {final_rec}")
         else:
             # Majority voting (Paper's fallback)
             final_rec = max(vote_counts, key=vote_counts.get)
@@ -746,6 +752,7 @@ Focus on price trends, technical indicators, and market valuation."""
             confidence = "HIGH" if majority_count > total_votes * 0.66 else "MEDIUM"
             method = "majority_voting"
             reasoning = f"Majority decision: {majority_count}/{total_votes} agents recommend {final_rec}"
+            print(f"DEBUG: Using majority voting - final_rec: {final_rec}, counts: {vote_counts}")
         
         return {
             "symbol": symbol,
