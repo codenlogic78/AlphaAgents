@@ -103,18 +103,22 @@ class AlphaAgentsSystem:
             
             # Check for consensus after each round
             final_positions = self._extract_positions_from_debate(round_responses)
-            if len(set(final_positions)) == 1:
+            logger.info(f"Round {round_num} extracted positions: {final_positions}")
+            
+            # Only check for consensus if we have valid positions
+            valid_positions = [p for p in final_positions if p != 'UNKNOWN']
+            if len(valid_positions) == 3 and len(set(valid_positions)) == 1:
                 logger.info(f"Consensus reached in round {round_num}!")
                 return {
                     "consensus_reached": True,
                     "method": "debate_consensus", 
-                    "final_recommendation": final_positions[0],
-                    "debate_summary": f"Consensus reached in round {round_num}: {final_positions[0]}",
+                    "final_recommendation": valid_positions[0],
+                    "debate_summary": f"Consensus reached in round {round_num}: {valid_positions[0]}",
                     "debate_responses": all_debate_responses,
                     "rounds": round_num
                 }
             
-            logger.info(f"Round {round_num} positions: {final_positions}")
+            logger.info(f"Round {round_num} - no consensus yet, continuing debate...")
         
         # No consensus after max rounds
         
@@ -189,8 +193,11 @@ This is round {round_num}. Defend your position in exactly 2 short sentences (un
                 positions.append('BUY')
             elif 'SELL' in text:
                 positions.append('SELL')
-            else:
+            elif 'HOLD' in text:
                 positions.append('HOLD')
+            else:
+                # If unclear, maintain original position - don't default to HOLD
+                positions.append('UNKNOWN')
         return positions
     
     def _majority_voting_fallback(self, original_recommendations: List[str], debate_responses: List[str]) -> Dict[str, Any]:
